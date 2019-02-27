@@ -1,4 +1,5 @@
 # user-service
+[![Build Status](https://travis-ci.org/davidseyboldblog/user-service.svg?branch=master)](https://travis-ci.org/davidseyboldblog/user-service)
 
 ```
 Request:
