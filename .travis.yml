@@ -1,0 +1,32 @@
+sudo: false
+
+language: go
+
+services:
+  - docker
+
+go:
+- 1.11.x
+
+env:
+  - GO111MODULE=on
+
+git:
+  depth: 1
+
+notifications:
+  email: false
+
+before_script:
+  - docker pull davidseyboldblog/user-service || true
+script:
+  - go test -v -race ./...
+  - docker build --pull --cache-from davidseyboldblog/user-service --tag davidseyboldblog/user-service .
+  
+before_deploy:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+deploy:
+  provider: script
+  script: docker push davidseyboldblog/user-service
+  on:
+    branch: master
