@@ -7,3 +7,7 @@ type User struct {
 	Email string `json:"email"`
 	Phone string `json:"phone"`
 }
+
+type UserList struct {
+	Users []User `json:"users"`
+}

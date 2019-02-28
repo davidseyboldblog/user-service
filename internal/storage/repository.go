@@ -18,6 +18,7 @@ const (
 	addUserQuery         = "INSERT INTO users (name, email, phone) VALUES(?, ?, ?)"
 	getUserQuery         = "SELECT id, name, email, phone FROM users WHERE id = ?"
 	updateUserQuery      = "UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?"
+	getAllQuery          = "SELECT id, name, email, phone FROM users"
 )
 
 type Storage struct {
@@ -101,4 +102,27 @@ func (s *Storage) Get(id int64) (listing.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *Storage) GetAll() ([]listing.User, error) {
+	var userList []listing.User
+	userRows, err := s.db.Query(getAllQuery)
+	defer userRows.Close()
+
+	if err != nil {
+		return []listing.User{}, errors.Wrap(err, "Error querying database")
+	}
+
+	for userRows.Next() {
+		var user listing.User
+		userRows.Scan(&user.ID, &user.Name, &user.Email, &user.Phone)
+		userList = append(userList, user)
+	}
+
+	err = userRows.Err()
+	if err != nil {
+		return []listing.User{}, errors.Wrap(err, "Error parsing results")
+	}
+
+	return userList, nil
 }

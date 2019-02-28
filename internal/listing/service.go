@@ -5,12 +5,14 @@ import "strconv"
 //Service interface for retrieving users
 type Service interface {
 	GetUser(string) (User, error)
+	GetUserList() (UserList, error)
 }
 
 //Repository used to interact with the data layer.
 //This is database agnostic
 type Repository interface {
 	Get(int64) (User, error)
+	GetAll() ([]User, error)
 }
 
 type service struct {
@@ -34,4 +36,13 @@ func (s *service) GetUser(id string) (User, error) {
 		return User{}, err
 	}
 	return user, nil
+}
+
+func (s *service) GetUserList() (UserList, error) {
+
+	users, err := s.usrRepo.GetAll()
+	if err != nil {
+		return UserList{}, err
+	}
+	return UserList{users}, nil
 }

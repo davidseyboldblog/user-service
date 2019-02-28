@@ -33,6 +33,7 @@ func Handler(addService adding.Service, listService listing.Service, updateServi
 	router.POST("/user-service/user", addUser(addService))
 	router.PUT("/user-service/user/:id", updateUser(updateService))
 	router.GET("/user-service/user/:id", getUser(listService))
+	router.GET("/user-service/user", getUserList(listService))
 
 	logrus.Info("Adding Middleware")
 	handler := handlers.CombinedLoggingHandler(os.Stdout, router)
@@ -99,6 +100,20 @@ func getUser(s listing.Service) httprouter.Handle {
 
 		w.Header().Set(ContentType, ApplicationJSON)
 		json.NewEncoder(w).Encode(user)
+	}
+}
+
+func getUserList(s listing.Service) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		userList, err := s.GetUserList()
+		if err != nil {
+			logrus.Error(err)
+			returnError(w, http.StatusInternalServerError, InternalServerErrorMessage)
+			return
+		}
+
+		w.Header().Set(ContentType, ApplicationJSON)
+		json.NewEncoder(w).Encode(userList)
 	}
 }
 
