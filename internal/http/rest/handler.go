@@ -25,6 +25,13 @@ const (
 	BadRequestMessage = "Bad Request"
 )
 
+type Server struct {
+	addService    adding.Service
+	listService   listing.Service
+	updateService updating.Service
+	router        *httprouter.Router
+}
+
 // Handler initializes routes
 func Handler(addService adding.Service, listService listing.Service, updateService updating.Service) http.Handler {
 	router := httprouter.New()

@@ -1,6 +1,10 @@
 package listing
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 type mockRepository struct {
 	user  User
@@ -36,17 +40,14 @@ func TestGetUser(t *testing.T) {
 		nil,
 	})
 
-	actualUser, _ := service.GetUser("1")
+	actualUser, err := service.GetUser("1")
 
-	if actualUser.ID != user.ID {
-		t.Fatalf("Expected ID to equal: %v but actual: %v", user.ID, actualUser.ID)
-	} else if actualUser.Name != user.Name {
-		t.Fatalf("Expected Name to equal: %v but actual: %v", user.Name, actualUser.Name)
-	} else if actualUser.Email != user.Email {
-		t.Fatalf("Expected Email to equal: %v but actual: %v", user.Email, actualUser.Email)
-	} else if actualUser.Phone != user.Phone {
-		t.Fatalf("Expected Phone to equal: %v but actual: %v", user.Phone, actualUser.Phone)
-	}
+	assert.NoError(t, err)
+
+	assert.Equal(t, user.ID, actualUser.ID)
+	assert.Equal(t, user.Name, actualUser.Name)
+	assert.Equal(t, user.Email, actualUser.Email)
+	assert.Equal(t, user.Phone, actualUser.Phone)
 }
 
 func TestGetUserList(t *testing.T) {
@@ -63,22 +64,17 @@ func TestGetUserList(t *testing.T) {
 		nil,
 	})
 
-	actualUserList, _ := service.GetUserList()
+	actualUserList, err := service.GetUserList()
 
-	if len(actualUserList.Users) != 1 {
-		t.Fatalf("Expected number of users to be: %v but found: %v", 1, len(actualUserList.Users))
-	}
+	assert.NoError(t, err)
+
+	assert.Equal(t, 1, len(actualUserList.Users))
 
 	actualUser := actualUserList.Users[0]
 
-	if actualUser.ID != user.ID {
-		t.Fatalf("Expected ID to equal: %v but actual: %v", user.ID, actualUser.ID)
-	} else if actualUser.Name != user.Name {
-		t.Fatalf("Expected Name to equal: %v but actual: %v", user.Name, actualUser.Name)
-	} else if actualUser.Email != user.Email {
-		t.Fatalf("Expected Email to equal: %v but actual: %v", user.Email, actualUser.Email)
-	} else if actualUser.Phone != user.Phone {
-		t.Fatalf("Expected Phone to equal: %v but actual: %v", user.Phone, actualUser.Phone)
-	}
+	assert.Equal(t, user.ID, actualUser.ID)
+	assert.Equal(t, user.Name, actualUser.Name)
+	assert.Equal(t, user.Email, actualUser.Email)
+	assert.Equal(t, user.Phone, actualUser.Phone)
 
 }

@@ -1,6 +1,10 @@
 package updating
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 type mockRepository struct {
 	err error
@@ -25,7 +29,6 @@ func TestUpdateUser(t *testing.T) {
 	})
 
 	err := service.UpdateUser("1", user)
-	if err != nil {
-		t.Fatalf("Expected success but instead got error: %v", err)
-	}
+
+	assert.NoError(t, err)
 }
