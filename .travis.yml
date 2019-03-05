@@ -10,6 +10,7 @@ go:
 
 env:
   - GO111MODULE=on
+  - IMAGE_NAME=davidseyboldblog/user-service
 
 git:
   depth: 1
@@ -21,13 +22,15 @@ before_script:
   - docker pull davidseyboldblog/user-service || true
 script:
   - go test -v -race ./...
-  - docker build --pull --cache-from davidseyboldblog/user-service --tag davidseyboldblog/user-service .
+  - docker build --pull --cache-from davidseyboldblog/user-service --tag "$IMAGE_NAME" .
   
 before_deploy:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:${TRAVIS_TAG}"
 deploy:
   provider: script
-  script: docker push davidseyboldblog/user-service
+  script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${TRAVIS_TAG}"
   on:
     branch: master
     tags: true
