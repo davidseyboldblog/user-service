@@ -30,3 +30,4 @@ deploy:
   script: docker push davidseyboldblog/user-service
   on:
     branch: master
+    tags: true
