@@ -9,8 +9,11 @@ go:
 - 1.11.x
 
 env:
-  - GO111MODULE=on
-  - IMAGE_NAME=davidseyboldblog/user-service
+  global:
+    - IMAGE_NAME=davidseyboldblog/user-service
+  matrix:
+    - GO111MODULE=on
+  
 
 git:
   depth: 1
